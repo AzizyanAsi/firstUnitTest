@@ -35,7 +35,6 @@ public class MenuMain {
 
         }
         System.out.println(findHighestPricedItem());
-        System.out.println(findItemByTitle("Test2"));
         System.out.println(findAveragePriceRateInTheGroup(group));
         System.out.println(findHighestPricedItemInTheDirectGroup(group1));
 

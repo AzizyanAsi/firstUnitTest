@@ -66,7 +66,7 @@ public class Storage {
                 .findFirst();
     }
 
-    public static Item findItemByTitle(String name) {
+    public static Item findItemByTitle(String name) throws ItemNotFoundException {
         for (Group group : groups) {
             Optional<Item> item = group.getItems()
                     .stream()
@@ -75,7 +75,7 @@ public class Storage {
             if (item.isPresent())
                 return item.get();
         }
-        return null;
+        throw new ItemNotFoundException();
     }
 
     public static Optional<Item> findHighestPricedItemInTheDirectGroup(Group group) {
@@ -105,6 +105,35 @@ public class Storage {
                 .mapToDouble(Item::calculatePrice)
                 .average()
                 .orElse(Double.NaN);
+    }
+
+    public static void deleteItem(String id) throws ItemNotFoundException {
+        for (Group group : groups) {
+            Optional<Item> item = group.getItems()
+                    .stream()
+                    .filter(b -> b.getId().equals(id))
+                    .findFirst();
+            if (item.isPresent()) {
+                group.getItems().remove(item.get());
+                return;
+            }
+        }
+        throw new ItemNotFoundException();
+    }
+
+    public static void updateItem(String id, String newName) throws ItemNotFoundException {
+        for (Group group : groups) {
+            Optional<Item> item = group.getItems()
+                    .stream()
+                    .filter(b -> b.getId().equals(id))
+                    .findFirst();
+
+            if (item.isPresent()) {
+                item.get().setName(newName);
+                return;
+            }
+        }
+        throw new ItemNotFoundException();
     }
 
     public static List<Group> getRoots() {
